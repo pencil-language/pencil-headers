@@ -48,7 +48,7 @@ extern void pencil_free (void * ptr);
 extern void pencil_init (enum PENCIL_INIT_FLAG flag);
 
 /** Release PENCIL runtime.  */
-extern void pencil_shutdown ();
+extern void pencil_shutdown (void);
 
 #ifdef __cplusplus
 }
