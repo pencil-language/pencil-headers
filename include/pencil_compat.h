@@ -25,14 +25,14 @@
 #define PENCIL_COMPAT_H
 
 /* PENCIL functions */
-#define __pencil_kill(loc)
-#define __pencil_use(loc)
-#define __pencil_def(loc)
+#define __pencil_kill(...)
+#define __pencil_use(...)
+#define __pencil_def(...)
 #define __pencil_maybe() 1
-#define __pencil_assume(expr)
+#define __pencil_assume(...)
 
 #include <assert.h>
-#define __pencil_assert(expr) assert(expr)
+#define __pencil_assert(...) assert(__VA_ARGS__)
 
 #define ACCESS(X)
 
