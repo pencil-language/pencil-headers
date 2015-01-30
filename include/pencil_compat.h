@@ -34,6 +34,8 @@
 #include <assert.h>
 #define __pencil_assert(expr) assert(expr)
 
+#define ACCESS(X)
+
 /* Additional PENCIL types not in C99 */
 /* half */
 #if __ARM_FP16_ARGS

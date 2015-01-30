@@ -40,11 +40,19 @@
 #ifndef PENCIL_H
 #define PENCIL_H
 
+/* Preprocessor aliases for PENCIL builtins */
+#define USE __pencil_use
+#define DEF __pencil_def
+#define MAYBE __pencil_maybe()
+
 #ifdef __PENCIL__
 /* The file is processed by the PENCIL-to-OpenCL code generator. */
 
 /* PENCIL built-in functions prototypes only. */
 #include "pencil_prototypes.h"
+
+/* PENCIL-specific macros */
+#define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
 
 #else
 /* The file is processed as a C file. */
