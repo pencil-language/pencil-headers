@@ -48,6 +48,12 @@
 #ifdef __PENCIL__
 /* The file is processed by the PENCIL-to-OpenCL code generator. */
 
+/* Custom stdbool.h */
+#define bool _Bool
+#define true 1
+#define false 0
+#define __bool_true_false_are_defined 1
+
 /* PENCIL built-in functions prototypes only. */
 #include "pencil_prototypes.h"
 
