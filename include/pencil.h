@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-/* There are 3 ways to use PENCIL file:
+/* There are 2 ways to use PENCIL file:
  *
  * 1. As Normal C file:
  *    - All PENCIL specific functions (like __pencil_assert) must be ignored.
@@ -31,26 +31,36 @@
  *    - All PENCIL specific functions must be preserved.
  *    - All PENCIL build-in function must be declared (to make the front-end
  *      happy), but not implemented.
- * 3. As C file produced by the PENCIL compiler:
- *    - All PENCIL specific functions (like __pencil_assert) must be ignored.
- *    - All PENCIL built-in functions (math functions, for example) must be
- *      implemented.
  */
 
 #ifndef PENCIL_H
 #define PENCIL_H
 
+/* Preprocessor aliases for PENCIL builtins */
+#define USE __pencil_use
+#define DEF __pencil_def
+#define MAYBE __pencil_maybe()
+
 #ifdef __PENCIL__
 /* The file is processed by the PENCIL-to-OpenCL code generator. */
+
+/* Custom stdbool.h */
+#define bool _Bool
+#define true 1
+#define false 0
+#define __bool_true_false_are_defined 1
 
 /* PENCIL built-in functions prototypes only. */
 #include "pencil_prototypes.h"
 
-#else
+/* PENCIL-specific macros */
+#define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
+
+#else /* __PENCIL__ */
 /* The file is processed as a C file. */
 
 /* PENCIL to C compatibility layer. */
 #include "pencil_compat.h"
 
-#endif
-#endif
+#endif /* __PENCIL__ */
+#endif /* PENCIL_H */
