@@ -29,6 +29,15 @@
 extern "C" {
 #endif
 
+enum PENCIL_INIT_FLAG
+{
+    PENCIL_TARGET_DEVICE_GPU_ONLY,
+    PENCIL_TARGET_DEVICE_CPU_ONLY,
+    PENCIL_TARGET_DEVICE_GPU_THEN_CPU,
+    PENCIL_TARGET_DEVICE_CPU_THEN_GPU,
+    PENCIL_TARGET_DEVICE_DYNAMIC
+};
+
 /** Memory allocation. Can be used in the same way, malloc is used.  */
 extern void * pencil_alloc (size_t size);
 
@@ -36,10 +45,38 @@ extern void * pencil_alloc (size_t size);
 extern void pencil_free (void * ptr);
 
 /** Initialize PENCIL runtime.  */
-extern void pencil_init ();
+extern void pencil_init (enum PENCIL_INIT_FLAG flag);
 
 /** Release PENCIL runtime.  */
-extern void pencil_shutdown ();
+extern void pencil_shutdown (void);
+
+
+/** smaller of two numbers, 
+    potentially called by ppcg generated code */
+static inline int __attribute__((const)) __ppcg_min(int a, int b) 
+{
+    if (a < b)
+        return a;
+    return b;
+}
+
+/** greater of two numbers, 
+    potentially called by ppcg generated code */
+static inline int __attribute__((const)) __ppcg_max(int a, int b) 
+{
+    if (a > b)
+        return a;
+    return b;
+}
+
+/** floored division (round to negative infinity), 
+    potentially called by ppcg generated code      */
+static inline int __attribute__((const)) __ppcg_floord(int n, int d)
+{
+    if (n<0)
+        return -((-n+d-1)/d);
+    return n/d;
+}
 
 #ifdef __cplusplus
 }
