@@ -1,0 +1,22 @@
+# PENCIL Header Files
+-----------------------
+This repository contains two folders:
+- include/ : which contains the PENCIL header files.
+For instance, it contains the pencil.h file that you should include
+in your PENCIL programs.
+- pencil_headers_generator/: which contains the PENCIL header files
+generator, it is the C++ program that was used to generate some of the PENCIL
+header files (Math functions).
+
+
+# Mailing List
+----------------
+For any problem, please send an email to pencil-discussion [AT] inria.fr
+
+
+# Authors
+----------
+- Riyadh Baghdadi.
+- Robert David.
+- Alexey Kravets.
+- Michael Kruse.
