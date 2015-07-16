@@ -23,6 +23,9 @@
  */
 #ifndef PENCIL_PROTOTYPES_H
 #define PENCIL_PROTOTYPES_H
+
+#include "pencil_prototypes_prl.h"
+
 char babs(char x) __attribute__((const));
 short sabs(short x) __attribute__((const));
 int iabs(int x) __attribute__((const));
@@ -181,7 +184,4 @@ unsigned char ubclampi(unsigned char val, unsigned char min, unsigned char max) 
 unsigned short usclampi(unsigned short val, unsigned short min, unsigned short max) __attribute__((const));
 unsigned int uclampi(unsigned int val, unsigned int min, unsigned int max) __attribute__((const));
 unsigned long ulclampi(unsigned long val, unsigned long min, unsigned long max) __attribute__((const));
-
-#define __pencil_npr_mem_tag(location, mode) __prl_npr_mem_tag(location, mode)
-
 #endif
