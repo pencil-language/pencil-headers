@@ -7,6 +7,9 @@ in your PENCIL programs.
 - pencil_headers_generator/: which contains the PENCIL header files
 generator, it is the C++ program that was used to generate some of the PENCIL
 header files (Math functions).
+Note that the header files generated from the PENCIL header generator
+are different from the headers in include/ as the later are modified
+by hand after being generated.
 
 
 # Mailing List
