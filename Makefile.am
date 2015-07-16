@@ -2,7 +2,7 @@
  
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = include runtime
+SUBDIRS = include
 
 EXTRA_DIST = \
 	autogen.sh
