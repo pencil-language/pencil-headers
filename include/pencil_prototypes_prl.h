@@ -24,6 +24,8 @@
 #ifndef PENCIL_PROTOTYPES_PRL_H
 #define PENCIL_PROTOTYPES_PRL_H
 
+#include <prl.h>
+
 #define __pencil_npr_mem_tag(location, mode) __prl_npr_mem_tag(location, mode)
 
 #endif
