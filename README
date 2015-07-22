@@ -1,10 +1,10 @@
 # PENCIL Header Files
 -----------------------
 This repository contains two folders:
-- include/ : which contains the PENCIL header files.
+- The include/ folder which contains the PENCIL header files.
 For instance, it contains the pencil.h file that you should include
 in your PENCIL programs.
-- pencil_headers_generator/: which contains the PENCIL header files
+- The pencil_headers_generator/ folder which contains the PENCIL header files
 generator, it is the C++ program that was used to generate some of the PENCIL
 header files (Math functions).
 Note that the header files generated from the PENCIL header generator
