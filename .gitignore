@@ -1,0 +1,13 @@
+# autoreconf -i
+Makefile.in
+/autom4te.cache/
+/build-aux/
+/m4/
+/aclocal.m4
+/configure
+
+# ./configure
+Makefile
+/config.log
+/config.status
+/libtool
