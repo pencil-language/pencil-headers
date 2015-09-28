@@ -20,12 +20,33 @@
  * THE SOFTWARE.
  * 
  * Note: this is a generated file. Do not modify.
+ * Note supplement: The vanilla generated file clashes with defintions of other
+ * standard libraries. It doesn't even match the PENCIL specification. Until
+ * these clashes have been worked out, do not re-generate this file.
  */
 #ifndef PENCIL_PROTOTYPES_H
 #define PENCIL_PROTOTYPES_H
 
 #include "pencil_prototypes_prl.h"
 
+/* These are the defintions of standard library functions that can be used by
+ * PENCIL code. Their implementation depends on the target language of the
+ * PENCIL compiler. The currently supported targets are:
+ * - ppcg to GNU C99: pencil_lib.h
+ * - ppcg to OpenCL: pencil_opencl.h
+ *
+ * Only the most common used defintions that are known to not clash with other
+ * declarations are enabled here until a general and consistent solution that
+ * works for all of them. Other type pre- and suffixes are redundant or
+ * contradicting.
+ */
+
+float sinf(float x) __attribute__((const));
+double sind(double x) __attribute__((const));
+float cosf(float x) __attribute__((const));
+double cosd(double x) __attribute__((const));
+
+#if 0
 char babs(char x) __attribute__((const));
 short sabs(short x) __attribute__((const));
 int iabs(int x) __attribute__((const));
@@ -36,6 +57,9 @@ unsigned int uabs(unsigned int x) __attribute__((const));
 unsigned long ulabs(unsigned long x) __attribute__((const));
 char bmax(char a, char b) __attribute__((const));
 short smax(short a, short b) __attribute__((const));
+
+/* PENCIL spec says this should be "max", which clashes with a ppcg-generated
+ * macro */
 int imax(int a, int b) __attribute__((const));
 long lmax(long a, long b) __attribute__((const));
 unsigned char ubmax(unsigned char a, unsigned char b) __attribute__((const));
@@ -50,6 +74,8 @@ unsigned char ubmin(unsigned char a, unsigned char b) __attribute__((const));
 unsigned short usmin(unsigned short a, unsigned short b) __attribute__((const));
 unsigned int umin(unsigned int a, unsigned int b) __attribute__((const));
 unsigned long ulmin(unsigned long a, unsigned long b) __attribute__((const));
+
+/* Missing "f" prefix? */
 float clampf(float val, float min, float max) __attribute__((const));
 double clampd(double val, double min, double max) __attribute__((const));
 float degreesf(float rad) __attribute__((const));
@@ -62,6 +88,8 @@ float signf(float x) __attribute__((const));
 double signd(double x) __attribute__((const));
 float stepf(float edge, float x) __attribute__((const));
 double stepd(double edge, double x) __attribute__((const));
+
+/* clashes with fmodf in math.h */
 float fmodf(float x) __attribute__((const));
 double fmodd(double x) __attribute__((const));
 float remainderf(float a, float b) __attribute__((const));
@@ -74,12 +102,17 @@ float madf(float a, float b, float c) __attribute__((const));
 double madd(double a, double b, double c) __attribute__((const));
 float fdimf(float x, float y) __attribute__((const));
 double fdimd(double x, double y) __attribute__((const));
+
+/* PENCIL spec says this should be "fmax" */
 float fmaxf(float a, float b) __attribute__((const));
 double fmaxd(double a, double b) __attribute__((const));
 float fminf(float a, float b) __attribute__((const));
 double fmind(double a, double b) __attribute__((const));
 float fabsf(float x) __attribute__((const));
+/* Contradicting pre- and suffix */
 double fabsd(double x) __attribute__((const));
+
+/* Type suffix instead of prefix */
 float expf(float x) __attribute__((const));
 double expd(double x) __attribute__((const));
 float exp2f(float x) __attribute__((const));
@@ -112,6 +145,9 @@ float rootnf(float x, int n) __attribute__((const));
 double rootnd(double x, int n) __attribute__((const));
 float hypotf(float x, float y) __attribute__((const));
 double hypotd(double x, double y) __attribute__((const));
+
+/* The vanilla generated file pencil_lib.h would emit this as macro to C99's
+ * double-only equivalent. */
 float sinf(float x) __attribute__((const));
 double sind(double x) __attribute__((const));
 float cosf(float x) __attribute__((const));
@@ -165,6 +201,8 @@ double lgamma_rd(double x, int* signp) __attribute__((const));
 float ceilf(float x) __attribute__((const));
 double ceild(double x) __attribute__((const));
 float floorf(float x) __attribute__((const));
+
+/* Clashes with a ppcg-generated macros. */
 double floord(double x) __attribute__((const));
 float truncf(float x) __attribute__((const));
 double truncd(double x) __attribute__((const));
@@ -176,6 +214,8 @@ float nextafterf(float from, float to) __attribute__((const));
 double nextafterd(double from, double to) __attribute__((const));
 float copysignf(float x, float y) __attribute__((const));
 double copysignd(double x, double y) __attribute__((const));
+
+/* "clamp" the only function which gets an "i" suffix */
 char bclampi(char val, char min, char max) __attribute__((const));
 short sclampi(short val, short min, short max) __attribute__((const));
 int iclampi(int val, int min, int max) __attribute__((const));
@@ -184,4 +224,6 @@ unsigned char ubclampi(unsigned char val, unsigned char min, unsigned char max) 
 unsigned short usclampi(unsigned short val, unsigned short min, unsigned short max) __attribute__((const));
 unsigned int uclampi(unsigned int val, unsigned int min, unsigned int max) __attribute__((const));
 unsigned long ulclampi(unsigned long val, unsigned long min, unsigned long max) __attribute__((const));
+#endif
+
 #endif
