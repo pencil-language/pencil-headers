@@ -27,8 +27,6 @@
 #ifndef PENCIL_PROTOTYPES_H
 #define PENCIL_PROTOTYPES_H
 
-#include "pencil_prototypes_prl.h"
-
 /* These are the defintions of standard library functions that can be used by
  * PENCIL code. Their implementation depends on the target language of the
  * PENCIL compiler. The currently supported targets are:

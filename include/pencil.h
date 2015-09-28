@@ -53,6 +53,8 @@
 /* PENCIL built-in functions prototypes only. */
 #include "pencil_prototypes.h"
 
+#define __pencil_npr_mem_tag(location, mode) __prl_npr_mem_tag(location, mode)
+
 /* PENCIL-specific macros */
 #define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
 
