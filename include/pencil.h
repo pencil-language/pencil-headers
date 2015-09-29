@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-/* There are 2 ways to use PENCIL file:
+/* There are 2 ways to use a PENCIL file:
  *
  * 1. As Normal C file:
  *    - All PENCIL specific functions (like __pencil_assert) must be ignored.
@@ -31,6 +31,11 @@
  *    - All PENCIL specific functions must be preserved.
  *    - All PENCIL build-in function must be declared (to make the front-end
  *      happy), but not implemented.
+ *
+ * It is possible by the spec to have PENCIL-functions as an extension to C
+ * embedded into C-code. This mode is broken because we cannot have different
+ * macro defintions within the embedded PENCIL-functions than around. It is
+ * still the mode used most of the time.
  */
 
 #ifndef PENCIL_H
@@ -50,19 +55,40 @@
 #define false 0
 #define __bool_true_false_are_defined 1
 
-/* PENCIL built-in functions prototypes only. */
-#include "pencil_prototypes.h"
-
-#define __pencil_npr_mem_tag(location, mode) __prl_npr_mem_tag(location, mode)
-
 /* PENCIL-specific macros */
 #define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
 
 #else /* __PENCIL__ */
 /* The file is processed as a C file. */
 
+/* PENCIL built-in functions prototypes only. */
+#include "pencil_prototypes.h"
+
 /* PENCIL to C compatibility layer. */
 #include "pencil_compat.h"
 
 #endif /* __PENCIL__ */
+
+#ifndef PRL_PENCIL_H
+/* This is for outer C-code not itself PENCIL-code calling PENCIL functions. */
+/* TODO: We maybe should put it into a separate header file because it is not
+ * compatible to the PENCIL grammar. It is not sufficient to put it into the
+ * "The file is processed as a C file" branch it would not be available to host
+ * code when compiling embedded PENCIL functions using ppcg.
+ */
+enum npr_mem_tags {
+	PENCIL_NPR_MEM_NOWRITE = 1,
+	PENCIL_NPR_MEM_NOREAD = 2,
+	PENCIL_NPR_MEM_NOACCESS = PENCIL_NPR_MEM_NOWRITE | PENCIL_NPR_MEM_NOREAD,
+	PENCIL_NPR_MEM_READ = 4,
+	PENCIL_NPR_MEM_WRITE = 8,
+	PENCIL_NPR_MEM_READWRITE = PENCIL_NPR_MEM_READ | PENCIL_NPR_MEM_WRITE
+};
+void __prl_npr_mem_tag(void *location, enum npr_mem_tags mode) __attribute__((weak));
+static void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode) {
+	if (&__prl_npr_mem_tag)
+		__prl_npr_mem_tag(location, mode);
+}
+#endif /* PRL_PENCIL_H */
+
 #endif /* PENCIL_H */
