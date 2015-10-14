@@ -31,9 +31,13 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-static inline float __attribute__((const, always_inline)) sinf(float x) { return sin(x); }
-static inline float __attribute__((const, always_inline)) sind(double x) { return sinf(x); }
-static inline float __attribute__((const, always_inline)) cosf(float x) { return cos(x); }
-static inline float __attribute__((const, always_inline)) cosd(double x) { return cosf(x); }
+
+// sinf declared in <math.h>
+static inline double __attribute__((const, always_inline)) sind(double x) { return sin(x); }
+// cosf declared in <math.h>
+static inline double __attribute__((const, always_inline)) cosd(double x) { return cos(x); }
+
+static inline float __attribute__((const, always_inline)) mixf(float x, float y, float a) { return x + (y - x) * a; }
+static inline double  __attribute__((const, always_inline)) mixd(double x, double y, double a) { return x + (y - x) * a; }
 
 #endif

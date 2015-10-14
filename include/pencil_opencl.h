@@ -28,8 +28,11 @@
 #define PENCIL_OPENCL_H
 
 float sinf(float x) { return sin(x); }
-float sind(double x) { return sin(x); }
+double sind(double x) { return sin(x); }
 float cosf(float x) { return cos(x); }
-float cosd(double x) { return cos(x); }
+double cosd(double x) { return cos(x); }
+
+float mixf(float x, float y, float a) { return mix(x,y,a); }
+double mixd(double x, double y, double a) { return mix(x,y,a); }
 
 #endif

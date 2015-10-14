@@ -58,11 +58,10 @@
 /* PENCIL-specific macros */
 #define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
 
+#include "pencil_prototypes.h"
+
 #else /* __PENCIL__ */
 /* The file is processed as a C file. */
-
-/* PENCIL built-in functions prototypes only. */
-#include "pencil_prototypes.h"
 
 /* PENCIL to C compatibility layer. */
 #include "pencil_compat.h"
