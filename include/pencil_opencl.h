@@ -28,11 +28,15 @@
 #define PENCIL_OPENCL_H
 
 float sinf(float x) { return sin(x); }
-double sind(double x) { return sin(x); }
 float cosf(float x) { return cos(x); }
+float mixf(float x, float y, float a) { return mix(x, y, a); }
+
+#ifdef cl_khr_fp64
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+double sind(double x) { return sin(x); }
 double cosd(double x) { return cos(x); }
-
-float mixf(float x, float y, float a) { return mix(x,y,a); }
-double mixd(double x, double y, double a) { return mix(x,y,a); }
-
+double mixd(double x, double y, double a) { return mix(x, y, a); }
+#pragma OPENCL EXTENSION cl_khr_fp64 : disable
 #endif
+
+#endif /* ifndef PENCIL_OPENCL_H */
