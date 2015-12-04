@@ -47,6 +47,8 @@ double cosd(double x) __attribute__((const));
 float mixf(float x, float y, float a) __attribute__((const));
 double mixd(double x, double y, double a) __attribute__((const));
 
+int clamp(int,int,int) __attribute__((pure));
+
 #if 0
 char babs(char x) __attribute__((const));
 short sabs(short x) __attribute__((const));

@@ -20,26 +20,95 @@
  * THE SOFTWARE.
  */
 
-/* There are 2 ways to use a PENCIL file:
- *
- * 1. As Normal C file:
- *    - All PENCIL specific functions (like __pencil_assert) must be ignored.
- *    - All PENCIL built-in functions (math functions, for example) must be
- *      implemented.
- *
- * 2. As PENCIL file supplied to the PENCIL compiler:
- *    - All PENCIL specific functions must be preserved.
- *    - All PENCIL build-in function must be declared (to make the front-end
- *      happy), but not implemented.
- *
- * It is possible by the spec to have PENCIL-functions as an extension to C
- * embedded into C-code. This mode is broken because we cannot have different
- * macro defintions within the embedded PENCIL-functions than around. It is
- * still the mode used most of the time.
- */
+/*
+
+Toolchains:
+
+ ___________________ ___________________ ___________________ ___________________
+ |     .pencil     | |     .pencil     | |       .c        | |   .c/.pencil.c  |
+ ------------------- ------------------- ------------------- -------------------
+
+ ___________________
+ |       cpp       |
+ |-D__PENCIL__=1   |
+ |-D__PENCIL_PURE__|
+ |-D__PENCIL_OPT__ |
+ -------------------
+
+ ___________________
+ | pencil-optimizer|
+ -------------------
+
+ ___________________ ___________________ ___________________
+ |      ppcg       | |      ppcg       | |      ppcg       |
+ |--pet-autodetect | |--pet-autodetect | |                 |
+ |-D__PENCIL__=2   | |-D__PENCIL__=2   | |-D__PENCIL__=2   |
+ |-D__PENCIL_PURE__| |-D__PENCIL_PURE__| |                 |
+ |-D__PENCIL_OPT__ | |                 | |                 |
+ ------------------- ------------------- -------------------
+
+ ___________________ ___________________ ___________________ ___________________
+ |    gcc/nvcc     | |    gcc/nvcc     | |    gcc/nvcc     | |       gcc       |
+ |                 | |                 | |                 | |                 |
+ |-D__PENCIL__=3   | |-D__PENCIL__=3   | |-D__PENCIL__=3   | |                 |
+ ------------------- ------------------- ------------------- -------------------
+
+ The toolchain with pencil-optimizer is currently unsupported.
+
+
+Backends:
+
+* OpenCL
+  - gcc
+  - -D__PENCIL_OPENCL__
+
+* CUDA
+  - nvcc
+  - -D__PENCIL_CUDA__
+
+*/
 
 #ifndef PENCIL_H
 #define PENCIL_H
+
+#include <math.h>
+
+
+#if defined(__PENCIL_CUDA__) && (__PENCIL__==3)
+#define _PENCIL_USE_C99_VLA 0
+#else
+#define _PENCIL_USE_C99_VLA 1
+#endif
+
+
+
+#define _PENCIL_CONCAT_internal(x,y) x ## y
+#define _PENCIL_CONCAT(x,y) _PENCIL_CONCAT_internal(x,y)
+//#define _PENCIL_CONCAT3(x,y,z)  _PENCIL_CONCAT_internal(x, _PENCIL_CONCAT_internal(y,z))
+#define _PENCIL_INVOKE(x,...) x(__VA_ARGS__)
+
+#define _PENCIL_NARGS_internal(unused, _1, _2, _3, _4, _5, VAL, ...) VAL
+#define _PENCIL_NARGS(...) _PENCIL_NARGS_internal(unused, ## __VA_ARGS__, 5, 4, 3, 2, 1, 0)
+
+#define _PENCIL_NARGS_DIV2_internal(unused, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, VAL, ...) VAL
+#define _PENCIL_NARGS_DIV2(...) _PENCIL_NARGS_DIV2_internal(unused, ## __VA_ARGS__, 5, invalid, 4, invalid, 3, invalid, 2, invalid, 1, invalid, 0)
+
+
+
+#if _PENCIL_USE_C99_VLA
+#define _PENCIL_VLA_PARAM_1(type,name,size1) type name[static const restrict size1]
+#define _PENCIL_VLA_DEREF_1(name,size1,index1) name[index1]
+#else
+#define _PENCIL_VLA_PARAM_1(type,name,SIZE1) type *name
+#define _PENCIL_VLA_DEREF_1(name,size1,index1) name[index1]
+#endif
+
+
+#define PENCIL_VLA_PARAM(type,name,...) _PENCIL_INVOKE(_PENCIL_CONCAT(_PENCIL_VLA_PARAM_,_PENCIL_NARGS     (__VA_ARGS__)),type,name,__VA_ARGS__)
+#define PENCIL_VLA_DEREF(     name,...) _PENCIL_INVOKE(_PENCIL_CONCAT(_PENCIL_VLA_DEREF_,_PENCIL_NARGS_DIV2(__VA_ARGS__)),     name,__VA_ARGS__)
+
+
+
 
 /* Preprocessor aliases for PENCIL builtins */
 #define USE __pencil_use

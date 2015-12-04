@@ -40,4 +40,6 @@ static inline double __attribute__((const, always_inline)) cosd(double x) { retu
 static inline float __attribute__((const, always_inline)) mixf(float x, float y, float a) { return x + (y - x) * a; }
 static inline double  __attribute__((const, always_inline)) mixd(double x, double y, double a) { return x + (y - x) * a; }
 
+static inline double  __attribute__((pure, always_inline)) clamp(int x, int hi, int lo) { if (x>hi) return hi; if (x<lo) return lo; return x; }
+
 #endif
