@@ -1,37 +1,17 @@
-/*
- * Copyright (c) 2014, ARM Limited
- * Copyright (c) 2014, Realeyes
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 #ifndef PENCIL_COMPAT_H
 #define PENCIL_COMPAT_H
 
-#include <assert.h>
-#include <stdbool.h>
+#if 0
+/* This file is also included by _host.c which is already preprocessed. That it,
+ * header guards #defines disappeared such that we cannot #include headers
+ * anymore that maybe already have been included. */
+#include <assert.h> /* assert */
+#include <stdbool.h>/* bool */
+#include <stdlib.h> /* abs, labs, llabs */
+#include <math.h>   /* sqrt, sqrtf, ... */
+#endif
 
-/* PENCIL built-in functions prototypes and (possible) implementations. */
-#include "pencil_lib.h"
-
-
-/* PENCIL functions */
+/* PENCIL builtin functions */
 #define __pencil_kill(...)
 #define __pencil_use(...)
 #define __pencil_def(...)
@@ -39,7 +19,18 @@
 #define __pencil_assume(...)
 #define __pencil_assert(...) assert(__VA_ARGS__)
 
-#define ACCESS(X)
+/* Avoid gcc warning for __attribute__(((pencil_access(func_summary))) */
+#define pencil_access(X) unused
+
+
+/* Non-standard */
+#define PENCIL_ACCESS(X)
+#define PENCIL_BEGIN_SCOP
+#define PENCIL_END_SCOP
+#define PENCIL_INDEPENDENT(X)
+#define pencil_array static const restrict
+#define PENCIL_ARRAY static const restrict
+#define PENCIL_SUMMARY_FUNC static __attribute__((unused))
 
 /* Additional PENCIL types not in C99 */
 /* half */

@@ -21,121 +21,34 @@
  */
 
 /*
+ * Header file to be included by programmer into pencil files.
+ */
 
-Toolchains:
+#ifndef _PENCIL_H
+#define _PENCIL_H
 
- ___________________ ___________________ ___________________ ___________________
- |     .pencil     | |     .pencil     | |       .c        | |   .c/.pencil.c  |
- ------------------- ------------------- ------------------- -------------------
+/* The user is free to include these before pencil.h; We will need them anyway so include them in all cases and avoid different behaviour depending on the #include order. */
+/* TODO: Except in pure mode */
+#include <stdbool.h>/* bool */
+#include <stdint.h> /* int32_t, int64_t */
+#include <stdlib.h> /* strtod, abs, labs, llabs */
+#include <math.h>   /* sin, sinf, ... */
 
- ___________________
- |       cpp       |
- |-D__PENCIL__=1   |
- |-D__PENCIL_PURE__|
- |-D__PENCIL_OPT__ |
- -------------------
+#define PENCIL_ARRAY static const restrict
+#define pencil_array PENCIL_ARRAY
 
- ___________________
- | pencil-optimizer|
- -------------------
+/* Preprocessor aliases for PENCIL builtins.
+ * They can be expanded here because the same magic happens using the __pencil_*
+ * definitions.
+ */
+#define PENCIL_USE __pencil_use
+#define PENCIL_DEF __pencil_def
+#define PENCIL_MAYBE (__pencil_maybe())
 
- ___________________ ___________________ ___________________
- |      ppcg       | |      ppcg       | |      ppcg       |
- |--pet-autodetect | |--pet-autodetect | |                 |
- |-D__PENCIL__=2   | |-D__PENCIL__=2   | |-D__PENCIL__=2   |
- |-D__PENCIL_PURE__| |-D__PENCIL_PURE__| |                 |
- |-D__PENCIL_OPT__ | |                 | |                 |
- ------------------- ------------------- -------------------
-
- ___________________ ___________________ ___________________ ___________________
- |    gcc/nvcc     | |    gcc/nvcc     | |    gcc/nvcc     | |       gcc       |
- |                 | |                 | |                 | |                 |
- |-D__PENCIL__=3   | |-D__PENCIL__=3   | |-D__PENCIL__=3   | |                 |
- ------------------- ------------------- ------------------- -------------------
-
- The toolchain with pencil-optimizer is currently unsupported.
-
-
-Backends:
-
-* OpenCL
-  - gcc
-  - -D__PENCIL_OPENCL__
-
-* CUDA
-  - nvcc
-  - -D__PENCIL_CUDA__
-
-*/
-
-#ifndef PENCIL_H
-#define PENCIL_H
-
-#include <math.h>
-
-
-#if defined(__PENCIL_CUDA__) && (__PENCIL__==3)
-#define _PENCIL_USE_C99_VLA 0
-#else
-#define _PENCIL_USE_C99_VLA 1
-#endif
-
-
-
-#define _PENCIL_CONCAT_internal(x,y) x ## y
-#define _PENCIL_CONCAT(x,y) _PENCIL_CONCAT_internal(x,y)
-//#define _PENCIL_CONCAT3(x,y,z)  _PENCIL_CONCAT_internal(x, _PENCIL_CONCAT_internal(y,z))
-#define _PENCIL_INVOKE(x,...) x(__VA_ARGS__)
-
-#define _PENCIL_NARGS_internal(unused, _1, _2, _3, _4, _5, VAL, ...) VAL
-#define _PENCIL_NARGS(...) _PENCIL_NARGS_internal(unused, ## __VA_ARGS__, 5, 4, 3, 2, 1, 0)
-
-#define _PENCIL_NARGS_DIV2_internal(unused, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, VAL, ...) VAL
-#define _PENCIL_NARGS_DIV2(...) _PENCIL_NARGS_DIV2_internal(unused, ## __VA_ARGS__, 5, invalid, 4, invalid, 3, invalid, 2, invalid, 1, invalid, 0)
-
-
-
-#if _PENCIL_USE_C99_VLA
-#define _PENCIL_VLA_PARAM_1(type,name,size1) type name[static const restrict size1]
-#define _PENCIL_VLA_DEREF_1(name,size1,index1) name[index1]
-#else
-#define _PENCIL_VLA_PARAM_1(type,name,SIZE1) type *name
-#define _PENCIL_VLA_DEREF_1(name,size1,index1) name[index1]
-#endif
-
-
-#define PENCIL_VLA_PARAM(type,name,...) _PENCIL_INVOKE(_PENCIL_CONCAT(_PENCIL_VLA_PARAM_,_PENCIL_NARGS     (__VA_ARGS__)),type,name,__VA_ARGS__)
-#define PENCIL_VLA_DEREF(     name,...) _PENCIL_INVOKE(_PENCIL_CONCAT(_PENCIL_VLA_DEREF_,_PENCIL_NARGS_DIV2(__VA_ARGS__)),     name,__VA_ARGS__)
-
-
-
-
-/* Preprocessor aliases for PENCIL builtins */
-#define USE __pencil_use
-#define DEF __pencil_def
-#define MAYBE __pencil_maybe()
-
-#ifdef __PENCIL__
-/* The file is processed by the PENCIL-to-OpenCL code generator. */
-
-/* Custom stdbool.h */
-#define bool _Bool
-#define true 1
-#define false 0
-#define __bool_true_false_are_defined 1
-
-/* PENCIL-specific macros */
-#define ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
-
-#include "pencil_prototypes.h"
-
-#else /* __PENCIL__ */
-/* The file is processed as a C file. */
-
-/* PENCIL to C compatibility layer. */
-#include "pencil_compat.h"
-
-#endif /* __PENCIL__ */
+/* For compatibility to the PENCIL spec. */
+#define USE PENCIL_USE
+#define DEF PENCIL_DEF
+#define MAYBE PENCIL_MAYBE
 
 #ifndef PRL_PENCIL_H
 /* This is for outer C-code not itself PENCIL-code calling PENCIL functions. */
@@ -159,4 +72,35 @@ static void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode) {
 }
 #endif /* PRL_PENCIL_H */
 
-#endif /* PENCIL_H */
+#ifdef __PENCIL__
+/* The file is processed by the PENCIL-to-OpenCL code generator. */
+
+/* Custom stdbool.h
+ * We cannot directly include stdbool because its content might notconfiorm the
+ * PENCIL grammar.
+ */
+#define bool _Bool
+#define true 1
+#define false 0
+#define __bool_true_false_are_defined 1
+
+/* PENCIL-specific macros */
+#define ACCESS(...) PENCIL_ACCESS(__VA_ARGS__)
+
+#include "pencil_mathdecl.h"
+
+#else /* __PENCIL__ */
+/* The file is processed as a C file. */
+
+/* PENCIL functionality that require an #include in C */
+#include <assert.h> /* assert */
+#include <stdbool.h>/* bool */
+#include <stdlib.h> /* abs, labs, llabs */
+#include <math.h>   /* sqrt, sqrtf, ... */
+
+#include "pencil_compat.h"
+#include "pencil_mathimpl.h"
+
+#endif /* __PENCIL__ */
+
+#endif /* _PENCIL_H */
