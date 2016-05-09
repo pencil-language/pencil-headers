@@ -10,4 +10,6 @@
 #define PENCIL_SUMMARY_FUNC
 #define PENCIL_ACCESS(...) __attribute__((pencil_access(__VA_ARGS__)))
 
+#define PENCIL_MATHDECL
+
 #endif /* _PENCIL_PPCG_H */

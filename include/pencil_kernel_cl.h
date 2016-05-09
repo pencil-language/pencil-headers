@@ -1,7 +1,7 @@
 #ifndef PENCIL_OPENCL_H
 #define PENCIL_OPENCL_H
 
-/* Do not #include other files here; ppcg just pastes this file lirally into the target file. */
+/* Do not #include other files here; ppcg just pastes this file literally into the target file. */
 
 /* These sizes are fixed by the OpenCL specification. */
 typedef int int32_t;

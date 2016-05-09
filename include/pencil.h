@@ -87,6 +87,7 @@ static void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode) {
 /* PENCIL-specific macros */
 #define ACCESS(...) PENCIL_ACCESS(__VA_ARGS__)
 
+/* must define PENCIL_MATHDECL (either static or not) */
 #include "pencil_mathdecl.h"
 
 #else /* __PENCIL__ */
