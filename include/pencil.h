@@ -65,10 +65,10 @@ enum npr_mem_tags {
 	PENCIL_NPR_MEM_WRITE = 8,
 	PENCIL_NPR_MEM_READWRITE = PENCIL_NPR_MEM_READ | PENCIL_NPR_MEM_WRITE
 };
-void __prl_npr_mem_tag(void *location, enum npr_mem_tags mode) __attribute__((weak));
+void prl_npr_mem_tag(void *location, enum npr_mem_tags mode) __attribute__((weak));
 static void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode) {
-	if (&__prl_npr_mem_tag)
-		__prl_npr_mem_tag(location, mode);
+	if (&prl_npr_mem_tag)
+		prl_npr_mem_tag(location, mode);
 }
 #endif /* PRL_PENCIL_H */
 
