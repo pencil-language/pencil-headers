@@ -34,9 +34,6 @@
 #include <stdlib.h> /* strtod, abs, labs, llabs */
 #include <math.h>   /* sin, sinf, ... */
 
-#define PENCIL_ARRAY static const restrict
-#define pencil_array PENCIL_ARRAY
-
 /* Preprocessor aliases for PENCIL builtins.
  * They can be expanded here because the same magic happens using the __pencil_*
  * definitions.
@@ -86,6 +83,9 @@ static void __pencil_npr_mem_tag(void *location, enum npr_mem_tags mode) {
 
 /* PENCIL-specific macros */
 #define ACCESS(...) PENCIL_ACCESS(__VA_ARGS__)
+
+#define pencil_array static const restrict
+#define PENCIL_ARRAY static const restrict
 
 /* must define PENCIL_MATHDECL (either static or not) */
 #include "pencil_mathdecl.h"
